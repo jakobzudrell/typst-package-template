@@ -54,7 +54,7 @@ jobs:
         uses: ./.gitea/setup-private-registry/
         with:
           repository: ${{ REGISTRY_REPO }}
-          token: ${{ secrets.REGISTRY_TOKEN }}
+          token: ${{ secrets.TYPST_PACKAGE_REPO_TOKEN }}
           namespace: zudrell.eu
 
       - name: Create archives
@@ -101,7 +101,7 @@ jobs:
         with:
           github-server-url: ${{ env.REGISTRY_FORGE }}
           repository: ${{ env.REGISTRY_REPO }}
-          token: ${{ secrets.REGISTRY_TOKEN }}
+          token: ${{ secrets.TYPST_PACKAGE_REPO_TOKEN }}
           path: package-registry
           sparse-checkout: ${{ env.PATH_PREFIX }}/${{ needs.build.outputs.pkg-name }}/${{ needs.build.outputs.pkg-version }}
 
