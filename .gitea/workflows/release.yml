@@ -6,19 +6,15 @@ on:
 env:
   # the forge (host) at which the registry lies
   # for Universe, this is Github (https://github.com)
-  REGISTRY_FORGE: https://github.com
+  REGISTRY_FORGE: https://git.zudrell.eu
   # the repository hosting published packages
   # this is cloned to ensure pull requests are based on the latest upstream commit
   # for Universe, this is typst/packages (https://github.com/typst/packages/)
   # the `secrets.REGISTRY_TOKEN` must be able to read from this repo
-  REGISTRY_REPO: typst/packages
-  # the repository to which to push the release version
-  # this should be a fork of the registry repo that you have push privileges to
-  # the `secrets.REGISTRY_TOKEN` must be able to push to this repo
-  REGISTRY_FORK: author/typst-packages
+  REGISTRY_REPO: jakobzudrell/typst-packages
   # the path within the registry repo where the "<name>/<version>" directory should be put
   # for Universe, this is packages/preview
-  PATH_PREFIX: packages/preview
+  PATH_PREFIX: .
 
 jobs:
   build:
@@ -54,6 +50,13 @@ jobs:
           echo "GIT_USER_NAME=$(git log -1 --pretty=format:'%an')" >> "${GITHUB_ENV}"
           echo "GIT_USER_EMAIL=$(git log -1 --pretty=format:'%ae')" >> "${GITHUB_ENV}"
 
+      - name: Setup zudrell.eu package registry
+        uses: ./.gitea/setup-private-registry/
+        with:
+          repository: ${{ REGISTRY_REPO }}
+          token: ${{ secrets.REGISTRY_TOKEN }}
+          namespace: zudrell.eu
+
       - name: Create archives
         run: |
           just package out
@@ -88,7 +91,7 @@ jobs:
           artifacts: ${{ needs.build.outputs.pkg-id }}/*
 
   publish:
-    name: Publish to a registry fork
+    name: Publish to a package repository
     needs: build
     runs-on: ubuntu-latest
 
@@ -132,10 +135,10 @@ jobs:
           PKG_ID: ${{ needs.build.outputs.pkg-id }}
         run: |
           cd package-registry
-          git remote add fork "${REGISTRY_FORGE}/${REGISTRY_FORK}"
+          git remote add fork "${REGISTRY_FORGE}/${REGISTRY_REPO}"
 
           echo "NOTE: if the following command fails with"
           echo '  "refusing to allow a Personal Access Token to create or update workflow'
-          echo '  `.github/workflows/deploy.yml` without `workflow` scope"'
+          echo '  `.gitea/workflows/deploy.yml` without `workflow` scope"'
           echo "then you need to bring your fork's main branch up to date with the registry repo"
           git push --force --set-upstream fork "${PKG_ID}"

@@ -27,8 +27,8 @@ package target:
 # install the library with the "@local" prefix
 install: (package "@local")
 
-# install the library with the "@preview" prefix (for pre-release testing)
-install-preview: (package "@preview")
+# install the library with the "@zudrell.eu" prefix (for pre-release testing)
+install-preview: (package "@zudrell.eu")
 
 [private]
 remove target:
@@ -38,7 +38,7 @@ remove target:
 uninstall: (remove "@local")
 
 # uninstalls the library from the "@preview" prefix (for pre-release testing)
-uninstall-preview: (remove "@preview")
+uninstall-preview: (remove "@zudrell.eu")
 
 # run ci suite
 ci: test doc
