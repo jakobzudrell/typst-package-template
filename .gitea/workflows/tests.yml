@@ -24,7 +24,7 @@ jobs:
             doc: true
 
     name: Test for ${{ matrix.typst-version.typst }} (Tytanic ${{ matrix.typst-version.tytanic }}${{ matrix.typst-version.doc && ', with docs' }})
-    runs-on: ubuntu-latest
+    runs-on: node-stable
 
     steps:
       - name: Checkout
