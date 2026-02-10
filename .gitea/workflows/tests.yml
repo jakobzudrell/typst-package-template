@@ -45,7 +45,7 @@ jobs:
         uses: ./.gitea/setup-private-registry/
         with:
           repository: ${{ REGISTRY_REPO }}
-          token: ${{ secrets.REGISTRY_TOKEN }}
+          token: ${{ secrets.TYPST_PACKAGE_REPO_TOKEN }}
           namespace: zudrell.eu
 
       - name: Setup tytanic
